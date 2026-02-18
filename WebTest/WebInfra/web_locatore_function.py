@@ -1,8 +1,13 @@
+import time
+
 from playwright.sync_api import Page
+from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
 
 
 class WeblocatoreFunction:
     DEFAULT_TIMEOUT_MS = 20_000
+    MAX_ATTEMPTS = 5
+    RETRY_DELAY_SEC = 2
 
     def __init__(self, page: Page):
         self.page = page
@@ -10,41 +15,80 @@ class WeblocatoreFunction:
     def is_element_found(self, selector: str) -> bool:
         try:
             return self.page.locator(selector).is_visible(timeout=self.DEFAULT_TIMEOUT_MS)
+        except PlaywrightTimeoutError:
+            return False
         except Exception:
             return False
 
-    def wait_for_element_visibility(self, selector: str) -> None:
-        if not self.is_element_found(selector):
-            raise AssertionError(
-                f"Element {selector} not visible within {self.DEFAULT_TIMEOUT_MS / 1000}s"
-            )
+    def wait_for_element_visibility(self, selector: str) -> bool:
+        visible = False
+        for attempt in range(self.MAX_ATTEMPTS):
+            if attempt > 0:
+                time.sleep(self.RETRY_DELAY_SEC)
+            try:
+                if self.is_element_found(selector):
+                    visible = True
+                    break
+            except Exception:
+                pass
+        return visible
 
     def click(self, selector: str) -> None:
-        self.page.locator(selector).click(timeout=self.DEFAULT_TIMEOUT_MS)
+        def do_click():
+            self.page.locator(selector).click(timeout=self.DEFAULT_TIMEOUT_MS)
+
+        clicked = False
+        last_error = None
+        for attempt in range(self.MAX_ATTEMPTS):
+            if attempt > 0:
+                time.sleep(self.RETRY_DELAY_SEC)
+            try:
+                if self.is_element_found(selector):
+                    do_click()
+                    clicked = True
+                    break
+            except Exception as e:
+                last_error = e
+
+        if not clicked and last_error:
+            raise AssertionError(
+                f"Failed to click {selector} after {self.MAX_ATTEMPTS} attempts. Last error: {last_error}"
+            )
+        assert clicked, f"Failed to click {selector} after {self.MAX_ATTEMPTS} attempts"
 
     def fill_text(self, selector: str, text: str) -> None:
-        self.page.locator(selector).fill(text, timeout=self.DEFAULT_TIMEOUT_MS)
+        filled = False
+        last_error = None
+        for attempt in range(self.MAX_ATTEMPTS):
+            if attempt > 0:
+                time.sleep(self.RETRY_DELAY_SEC)
+            try:
+                if self.is_element_found(selector):
+                    self.page.locator(selector).fill(text, timeout=self.DEFAULT_TIMEOUT_MS)
+                    filled = True
+                    break
+            except Exception as e:
+                last_error = e
+
+        if not filled and last_error:
+            raise AssertionError(
+                f"Failed to fill {selector} after {self.MAX_ATTEMPTS} attempts. Last error: {last_error}"
+            )
+        assert filled, f"Failed to fill {selector} after {self.MAX_ATTEMPTS} attempts"
 
     def switch_to_frame(self, frame_selector: str):
-        self.page.frame_locator(frame_selector)
+        return self.page.frame_locator(frame_selector)
 
     def is_displayed(self, selector: str) -> bool:
         return self.is_element_found(selector)
+
+    def is_element_display_with_retry(self, selector: str) -> bool:
+        return self.wait_for_element_visibility(selector)
 
     def alert_ok(self):
         self.page.on("dialog", lambda dialog: dialog.accept())
 
     def get_text_from_at(self, selector: str, attribute: str) -> str | None:
-        self.wait_for_element_visibility(selector)
+        if not self.wait_for_element_visibility(selector):
+            return None
         return self.page.locator(selector).get_attribute(attribute)
-
-    # def mark_element(self, selector):
-    #     color = "#0000FF"
-    #     element_handle = self.page.query_selector(selector)
-    #     if element_handle:
-    #         self.page.evaluate("element => element.style.border = '3px solid ' + arguments[1]", element_handle, color)
-
-# Example of usage
-# driver = webdriver.Chrome()  # Or any other browser you're using
-# base_functions = BaseFunctions(driver)
-# Remember to replace 'webdriver.Chrome()' with your actual WebDriver initialization.

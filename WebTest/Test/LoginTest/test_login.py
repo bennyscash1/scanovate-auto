@@ -1,3 +1,4 @@
+from math import log
 import os
 import sys
 
@@ -13,7 +14,6 @@ class TestLoginWeb:
     def setup_method(self):
         self.driver = WebDriverFactory()
         self.page = self.driver.get_page()
-
         self.url = GetData.loaded_data[GetData.VarData.WebUrl]
         self.web_user_name = GetData.loaded_data[GetData.VarData.WebUserName]
         self.web_password = GetData.loaded_data[GetData.VarData.WebPassword]
@@ -22,5 +22,5 @@ class TestLoginWeb:
     def test_login_web(self):
         login_flow = LoginFlow(self.page)
         login_flow.open_page(True, url=self.url)
-        login_flow.login_web_flow(self.web_user_name, self.web_password)
-        assert login_flow.is_eamil_display_on_dashboard(self.web_user_name) , "Login failed - User email not displayed on dashboard"
+        login_flow.web_login_flow(self.web_user_name, self.web_password)
+        assert login_flow.is_home_page_open(), "Login failed: Home page not displayed after login attempt."

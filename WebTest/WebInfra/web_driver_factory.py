@@ -1,7 +1,7 @@
 from playwright.sync_api import sync_playwright
 
 class WebDriverFactory:
-    def __init__(self, browser_type: str = "chrome", headless: bool = False, device: str = None):
+    def __init__(self, browser_type: str = "chrome", headless: bool = False, device: str = ""):
         self._playwright = sync_playwright().start()
 
         self.browser, self.page = self._launch_browser(

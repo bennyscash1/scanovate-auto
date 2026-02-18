@@ -2,3 +2,5 @@ requests
 playwright
 Appium-Python-Client
 pytest
+pytest-html
+flask

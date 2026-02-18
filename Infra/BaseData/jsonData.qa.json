@@ -6,9 +6,9 @@
 
   },
   "WebUi": {
-    "WebUrl": "https://practicetestautomation.com/practice-test-login/",
-    "WebUserName": "student",
-    "WebPassword": "Password123"
+    "WebUrl": "https://qa-company5-console.purpleray.com/login",
+    "WebUserName": "test3@scanovate.com",
+    "WebPassword": "Ee123456!"
   },
   "Mobile": {
     "ContactName": "בני",
