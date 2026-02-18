@@ -15,4 +15,3 @@ class BasePages(WeblocatoreFunction):
         selector = f"//div[normalize-space()='{title_name}']"
         self.click(selector)
         return self
-
