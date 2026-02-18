@@ -1,0 +1,23 @@
+{
+  "API": {
+    "ClientId": "rUysFIwTCg25LnvUrbwjOvqy43i48F",
+    "ClientSecret": "J9FW8nI$x03JtXcm15YeEcQllsQKl!-!I01jwlDX",
+    "BaseApiUrl": "https://qa-company5-gateway.purpleray.com/"
+
+  },
+  "WebUi": {
+    "WebUrl": "https://practicetestautomation.com/practice-test-login/",
+    "WebUserName": "student",
+    "WebPassword": "Password123"
+  },
+  "Mobile": {
+    "ContactName": "בני",
+    "ContactNumber": "0584102220",
+    "appPackage": "com.google.android.contacts",
+    "appActivity": "com.android.contacts.activities.PeopleActivity"
+  },
+  "Common": {
+    "Enviorment": "qa"
+  }
+}
+

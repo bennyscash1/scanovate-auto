@@ -1,0 +1,4 @@
+requests
+playwright
+Appium-Python-Client
+pytest
