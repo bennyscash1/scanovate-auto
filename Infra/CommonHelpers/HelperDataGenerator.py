@@ -61,3 +61,13 @@ def generate_user_id():
     id_digits[8] = check_digit
 
     return "".join(map(str, id_digits))
+
+class GetEnumDescription(Enum):
+    def __new__(cls, value, description: str):
+        obj = object.__new__(cls)
+        obj._value_ = value
+        obj.description = description
+        return obj
+
+    def get_description(self) -> str:
+        return self.description

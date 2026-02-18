@@ -1,3 +1,4 @@
+from enum import Enum
 from playwright.sync_api import Page
 
 from WebTest.PageObject.base_pages import BasePages
@@ -17,8 +18,15 @@ class BaseFlows:
     def navigate_to_url(self, url: str):
         self.page.goto(url)
 
-# Example of usage:
-# driver = webdriver.Chrome()  # Or any other browser
-# base_flows = BaseFlows(driver)
-# base_flows.navigate_to_url("https://example.com")
-# print(base_flows.get_current_url())
+    def open_sidebar_menu(self, SideBarEnum: SideBar):
+        self.base_pages.ClickOnMainMenueTitleByName(SideBarEnum.value)
+        return self
+
+class SideBar(Enum):
+    GENERAL = "General"
+    DATA_MODULE = "data module"
+    WORKFLOW_MANAGEMENT = "WORKFLOW MANAGEMENT"
+    AUTORIZATION_MANAGER = "AUTORIZATION MANAGER"
+    API_MANAGER = "Api Manager"
+    SCANOVATE_ADMIN = "SCANOVATE ADMIN"
+
