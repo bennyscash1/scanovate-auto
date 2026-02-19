@@ -1,6 +1,7 @@
 from playwright.sync_api import Page
 
 from WebTest.PageObject.base_pages import BasePages
+from WebTest.WebInfra.web_locatore_function import Attempts
 
 
 class LoginPage(BasePages):
@@ -25,7 +26,8 @@ class LoginPage(BasePages):
         return self
 
     def is_home_page_displayed(self) -> bool:
-        logo_visible = self.is_element_display_with_retry(self.m_home_page_logo_by)
+        logo_visible = self.is_element_display_with_retry(self.m_home_page_logo_by, 
+        Attempts.AttampLeavel_5)
         if logo_visible:
             return True
         return self.is_element_display_with_retry(self.m_dashboard_email_by)

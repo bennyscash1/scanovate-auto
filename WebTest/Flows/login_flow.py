@@ -9,11 +9,6 @@ class LoginFlow(BaseFlows):
         super().__init__(page)
         self.login_page = LoginPage(page)
 
-    def open_page(self, navigate_to_logon_screen=True, url=None):
-        if navigate_to_logon_screen and url is not None:
-            self.page.goto(url)  
-        return self
-
     def web_login_flow(self, email: str, password: str):
         self.login_page.enter_email(email).enter_password(password).click_on_submit_button()
         return self

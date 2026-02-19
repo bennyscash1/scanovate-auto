@@ -1,8 +1,17 @@
 from playwright.sync_api import sync_playwright
 
+
+_PLAYWRIGHT_SINGLETON = None
+
+
 class WebDriverFactory:
     def __init__(self, browser_type: str = "chrome", headless: bool = False, device: str = ""):
-        self._playwright = sync_playwright().start()
+        global _PLAYWRIGHT_SINGLETON
+
+        if _PLAYWRIGHT_SINGLETON is None:
+            _PLAYWRIGHT_SINGLETON = sync_playwright().start()
+
+        self._playwright = _PLAYWRIGHT_SINGLETON
 
         self.browser, self.page = self._launch_browser(
             browser_type=browser_type,
@@ -41,5 +50,5 @@ class WebDriverFactory:
             if getattr(self, "browser", None):
                 self.browser.close()
         finally:
-            if getattr(self, "_playwright", None):
-                self._playwright.stop()
+
+            pass

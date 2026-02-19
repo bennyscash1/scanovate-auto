@@ -16,7 +16,7 @@ class TestLoginWeb:
         self.driver = WebDriverFactory()
         self.page = self.driver.get_page()
 
-    def test_login_web(self):
+    def test_navigate_email_page(self):
         login_flow = LoginFlow(self.page)
         login_flow.login_with_default_user()
 

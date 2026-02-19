@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from enum import Enum
 from playwright.sync_api import Page
 
@@ -14,8 +16,10 @@ class BaseFlows:
     def get_current_url(self) -> str:
         return self.page.url
 
-    def navigate_to_url(self, url: str):
-        self.page.goto(url)
+    def open_page(self, navigate_to_logon_screen=True, url=None, timeout_ms: int = 30_000):
+        if navigate_to_logon_screen and url is not None:
+            self.page.goto(url, timeout=timeout_ms)
+        return self
 
     def open_main_menue_side_bar(self, SideBarEnum: SideBarMenue):
         self.base_pages.ClickOnMainMenueTitleByName(SideBarEnum.value)
